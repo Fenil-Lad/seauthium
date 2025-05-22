@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login Success</title>
+    <style>
+        /* === Paste your entire CSS here === */
+        :root {
+            /* Apple Color System */
+            --system-gray-6: #F2F2F7;
+            --system-gray-5: #E5E5EA;
+            --system-gray-4: #D1D1D6;
+            --system-gray-3: #C7C7CC;
+            --system-gray-2: #AEAEB2;
+            --system-gray-1: #8E8E93;
+            --system-blue: #007AFF;
+            --system-green: #34C759;
+            --system-indigo: #5856D6;
+            --system-teal: #5AC8FA;
+            --system-purple: #AF52DE;
+            --system-orange: #dddddd;
+            --system-red: #FF3B30;
+            --system-yellow: #FFCC00;
+            --system-font-dark: #dddddd;
+            --system-font-light: #1A1A1A;
+            --system-background: #FFFFFF;
+            --secondary-system-background: #F2F2F7;
+            --tertiary-system-background: #FFFFFF;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --transition-fast: 0.15s ease;
+            --transition-medium: 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #3B3B3B;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            padding: 24px;
+        }
+
+        .auth-card {
+            width: 100%;
+            background-color: #2D2D2D;
+            box-shadow: var(--shadow-lg);
+            border-radius: 30px;
+            padding: clamp(24px, 5vw, 40px);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        h3 {
+            font-size: clamp(20px, 4vw, 24px);
+            font-weight: 500;
+            margin: 0 0 24px 0;
+            color: var(--system-font-dark);
+            text-align: center;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        .status-success {
+            background-color: rgba(52, 199, 89, 0.1);
+            color: var(--system-green);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 14px;
+            color: var(--system-gray-2);
+            padding: 0 20px;
+        }
+
+        .auth-footer a {
+            color: var(--system-orange);
+            text-decoration: none;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h3>Login Successful</h3>
+            <div class="status-indicator status-success">
+                You have successfully signed in with the standard password sign-in.
+            </div>
+        </div>
+        <div class="auth-footer">
+            <button id="logout_btn" type="button"
+                style="background:none; border:none; color: var(--system-orange); cursor:pointer; padding: 0; font-size: inherit;">
+                Sign out
+            </button>
+
+        </div>
+    </div>
+
+    <script>
+        const log_out_btn = document.getElementById('logout_btn');
+        log_out_btn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to log out?')) {
+                window.location.href = '/logout';
+
+            }
+            else {
+                alert('Logout cancelled.');
+            }
+        });
+    </script>
+</body>
+
+</html>

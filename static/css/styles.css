@@ -1,0 +1,472 @@
+     :root {
+            /* Apple Color System */
+            --system-gray-6: #F2F2F7;
+            --system-gray-5: #E5E5EA;
+            --system-gray-4: #D1D1D6;
+            --system-gray-3: #C7C7CC;
+            --system-gray-2: #AEAEB2;
+            --system-gray-1: #8E8E93;
+
+            --system-blue: #007AFF;
+            --system-green: #34C759;
+            --system-indigo: #5856D6;
+            --system-teal: #5AC8FA;
+            --system-purple: #AF52DE;
+            --system-orange: #dddddd;
+            --system-red: #FF3B30;
+            --system-yellow: #FFCC00;
+
+            --system-font-dark: #dddddd;
+            --system-font-light: #1A1A1A;
+
+            --system-background: #FFFFFF;
+            --secondary-system-background: #F2F2F7;
+            --tertiary-system-background: #FFFFFF;
+
+            /* Elevation */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+            /* Animation */
+            --transition-fast: 0.15s ease;
+            --transition-medium: 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #3B3B3B;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            padding: 24px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .logo h2 {
+            font-size: clamp(28px, 5vw, 36px);
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin: 0;
+            color: var(--system-font-dark);
+        }
+
+        .auth-card {
+            width: 100%;
+            background-color: #2D2D2D;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.295);
+            border-radius: 30px;
+            padding: clamp(24px, 5vw, 40px);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        h3 {
+            font-size: clamp(20px, 4vw, 24px);
+            font-weight: 500;
+            margin: 0 0 24px 0;
+            color: var(--system-font-dark);
+            text-align: center;
+        }
+
+        .auth-description {
+            font-size: clamp(14px, 3vw, 16px);
+            color: var(--system-gray-2);
+            text-align: center;
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--system-gray-1);
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        input[type="token"] {
+            width: 100%;
+            padding: 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            background-color: #303030;
+            transition: all var(--transition-fast);
+            -webkit-appearance: none;
+            font-family: inherit;
+            color: var(--system-font-dark);
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus,
+        input[type="token"]:focus {
+            outline: none;
+            border-color: var(--system-orange);
+            box-shadow: 0 0 0 2px var(--system-font-dark);
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--system-font-dark);
+        }
+
+        .input-group input {
+            padding-left: 44px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 500;
+            background-color: var(--system-orange);
+            color: var(--system-font-light);
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            margin-top: 8px;
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(90%);
+        }
+
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: var(--system-gray-2);
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 2px solid var(--system-font-dark);
+        }
+
+        .divider::before {
+            margin-right: 16px;
+        }
+
+        .divider::after {
+            margin-left: 16px;
+        }
+
+        .btn-secondary {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            color: var(--system-orange);
+            text-decoration: none;
+            border: 2px solid var(--system-gray-4);
+            border-radius: 14px;
+            transition: all var(--transition-fast);
+            margin-bottom: 12px;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background-color: #dddddd;
+            color: var(--system-font-light);
+        }
+
+
+        .reverse-btn-secondary {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            color: var(--system-orange);
+            text-decoration: none;
+            border: 2px solid none;
+            border-radius: 14px;
+            transition: all var(--transition-fast);
+            margin-bottom: 12px;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        .reverse-btn-secondary:hover {
+            background-color: var(--system-font-dark);
+            color: var(--system-font-light)
+        }
+
+        .auth-method {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            background-color: #303030;
+            color: var(--system-font-dark);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+
+        }
+
+        .auth-method:hover {
+            filter: brightness(110%);
+        }
+
+        .auth-method:active {
+            transform: translateY(0);
+        }
+
+        .auth-method i {
+            font-size: 22px;
+            margin-right: 16px;
+            width: 24px;
+            text-align: center;
+            color: var(--system-font-dark);
+        }
+
+        .auth-method .method-info {
+            flex: 1;
+        }
+
+        .auth-method .method-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+            font-size: 16px;
+        }
+
+        .auth-method .method-desc {
+            font-size: 13px;
+            color: var(--system-gray-2);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 14px;
+            color: var(--system-gray-2);
+            padding: 0 20px;
+        }
+
+        .auth-footer a {
+            color: var(--system-orange);
+            text-decoration: none;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Tab Navigation */
+        .auth-tabs-container {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 8px;
+            justify-content: center;
+        }
+
+        .auth-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .auth-tab {
+            flex: 0 0 auto;
+            padding: 12px 16px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--system-gray-2);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+
+        .auth-tab.active {
+            color: var(--system-orange);
+            border-bottom-color: var(--system-orange);
+        }
+
+        .auth-tab:hover {
+            color: var(--system-orange);
+        }
+
+        /* Biometric Options */
+        .biometric-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .biometric-btn {
+            padding: 16px 12px;
+            border-radius: 10px;
+            background-color: #303030;
+            color: var(--system-font-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .biometric-btn:hover {
+            filter: brightness(110%);
+        }
+
+        .biometric-btn:active {
+            transform: translateY(0);
+        }
+
+        .biometric-btn i {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: var(--system-orange);
+        }
+
+        .biometric-btn span {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .status-success {
+            background-color: rgba(52, 199, 89, 0.1);
+            color: var(--system-green);
+        }
+
+        .status-error {
+            background-color: rgba(255, 59, 48, 0.1);
+            color: var(--system-red);
+        }
+
+        .status-warning {
+            background-color: rgba(255, 204, 0, 0.1);
+            color: var(--system-yellow);
+        }
+
+        i.margin_i {
+            margin-top: -9px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 16px;
+            }
+
+            .auth-card {
+                padding: 24px;
+                border-radius: 12px;
+            }
+
+            .biometric-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Dark Mode */
+        /* @media (prefers-color-scheme: dark) {
+            :root {
+                --system-gray-6: #1C1C1E;
+                --system-gray-5: #2C2C2E;
+                --system-gray-4: #3A3A3C;
+                --system-gray-3: #48484A;
+                --system-gray-2: #636366;
+                --system-gray-1: #8E8E93;
+                
+                --system-background: #000000;
+                --secondary-system-background: #1C1C1E;
+                --tertiary-system-background: #2C2C2E;
+            }
+            
+            body {
+                color: #FFF;
+            }
+            
+            .auth-card {
+                background-color: var(--secondary-system-background);
+            }
+            
+            input[type="text"],
+            input[type="password"],
+            input[type="email"],
+            input[type="token"] {
+                background-color: var(--secondary-system-background);
+                border-color: var(--system-gray-4);
+                color: #FFF;
+            }
+            
+            .auth-method {
+                background-color: var(--system-gray-5);
+            }
+            
+            .auth-method:hover {
+                background-color: var(--system-gray-4);
+            }
+            
+            .biometric-btn {
+                background-color: var(--secondary-system-background);
+            }
+            
+            .biometric-btn:hover {
+                background-color: var(--system-gray-5);
+            }
+        } */
