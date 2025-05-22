@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seauthium - Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="logo">
+            <h2>Seauthium</h2>
+        </div>
+
+        <div class="auth-tabs-container">
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="showRegisterMethod('password')">Password</div>
+                <div class="auth-tab" onclick="showRegisterMethod('email')">Email</div>
+                <div class="auth-tab" onclick="showRegisterMethod('social')">Social</div>
+                <div class="auth-tab" onclick="showRegisterMethod('biometric')">Biometric</div>
+                <div class="auth-tab" onclick="showRegisterMethod('token')">Token</div>
+            </div>
+        </div>
+
+        <!-- Password Registration -->
+        <div id="password-register" class="auth-card">
+            <h3>Create Your Account</h3>
+            <p class="auth-description">Register using your email and a password</p>
+
+            <form id="registerForm">
+                <div class="input-group">
+                    <i class="fas fa-envelope margin_i"></i>
+                    <input type="email" id="reg-email" name="email" placeholder="Email address" required>
+                </div>
+
+                <div class="input-group">
+                    <i class="fas fa-lock margin_i"></i>
+                    <input type="password" id="reg-password" name="password" placeholder="Password" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Create Account</button>
+
+                <div class="divider">or</div>
+
+                <button type="button" class="btn-secondary" onclick="showRegisterMethod('email')">
+                    Register with Email Link
+                </button>
+
+                <a href="/auth/login" class="btn-secondary">Already have an account?</a>
+            </form>
+        </div>
+
+        <!-- Email Registration -->
+        <div id="email-register" class="auth-card" style="display: none;">
+            <h3>Email Registration</h3>
+            <p class="auth-description">We’ll send a confirmation link to your email</p>
+
+            <form action="/register/email" method="post">
+                <div class="input-group">
+                    <i class="fas fa-envelope margin_i"></i>
+                    <input type="email" name="email" placeholder="Email address" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Send Confirmation Link</button>
+
+                <div class="divider">or</div>
+
+                <button type="button" class="btn-secondary" onclick="showRegisterMethod('password')">
+                    Register with Password
+                </button>
+
+                <a href="/auth/login" class="btn-secondary">Already have an account?</a>
+            </form>
+        </div>
+
+        <!-- Social Registration -->
+        <div id="social-register" class="auth-card" style="display: none;">
+            <h3>Register with Social</h3>
+            <p class="auth-description">Sign up using your existing accounts</p>
+
+            <div class="auth-method" onclick="triggerSocialRegister('apple')">
+                <i class="fab fa-apple"></i>
+                <div class="method-info">
+                    <div class="method-title">Register with Apple</div>
+                    <div class="method-desc">Simple and private</div>
+                </div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+
+            <div class="auth-method" onclick="triggerSocialRegister('google')">
+                <i class="fab fa-google" style="color: #DB4437;"></i>
+                <div class="method-info">
+                    <div class="method-title">Register with Google</div>
+                    <div class="method-desc">Use your Gmail</div>
+                </div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+
+            <div class="auth-method" onclick="triggerSocialRegister('github')">
+                <i class="fab fa-github"></i>
+                <div class="method-info">
+                    <div class="method-title">Register with GitHub</div>
+                    <div class="method-desc">Developer friendly</div>
+                </div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+
+            <div class="divider">or</div>
+
+            <button type="button" class="btn-secondary" onclick="showRegisterMethod('password')">
+                Register with Password
+            </button>
+
+            <a href="/auth/login" class="btn-secondary">Already have an account?</a>
+        </div>
+
+        <!-- Biometric Registration -->
+        <div id="biometric-register" class="auth-card" style="display: none;">
+            <h3>Biometric Registration</h3>
+            <p class="auth-description">Set up biometric access</p>
+
+            <div class="status-indicator status-success" id="biometric-status" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <span>Biometric support available</span>
+            </div>
+
+            <div class="biometric-options">
+                <div class="biometric-btn" onclick="triggerBiometricRegister('face')">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Face ID</span>
+                </div>
+                <div class="biometric-btn" onclick="triggerBiometricRegister('fingerprint')">
+                    <i class="fas fa-fingerprint"></i>
+                    <span>Touch ID</span>
+                </div>
+                <div class="biometric-btn" onclick="triggerBiometricRegister('device')">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>Device PIN</span>
+                </div>
+            </div>
+
+            <div class="divider">or</div>
+
+            <button type="button" class="btn-secondary" onclick="showRegisterMethod('password')">
+                Register with Password
+            </button>
+
+            <a href="/auth/login" class="btn-secondary">Already have an account?</a>
+        </div>
+
+        <!-- Token Registration -->
+        <div id="token-register" class="auth-card" style="display: none;">
+            <h3>Token Registration</h3>
+            <p class="auth-description">Register using a developer token</p>
+
+            <div class="status-indicator status-warning">
+                <i class="fas fa-info-circle"></i>
+                <span>Advanced users only</span>
+            </div>
+
+            <form action="/register/token" method="post">
+                <div class="input-group">
+                    <i class="fas fa-key margin_i"></i>
+                    <input type="text" name="token" placeholder="Enter your token" required>
+                </div>
+
+                <div class="input-group">
+                    <i class="fas fa-tag margin_i"></i>
+                    <input type="text" name="token-name" placeholder="Token name (optional)">
+                </div>
+
+                <button type="submit" class="btn-primary">Register</button>
+
+                <div class="divider">or</div>
+
+                <button type="button" class="btn-secondary" onclick="showRegisterMethod('password')">
+                    Register with Password
+                </button>
+
+                <a href="/auth/login" class="btn-secondary">Already have an account?</a>
+            </form>
+        </div>
+
+        <div class="auth-footer">
+            By continuing, you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.
+        </div>
+    </div>
+
+    <script>
+        function showRegisterMethod(method) {
+            document.querySelectorAll('.auth-card').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.auth-tab').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(method + '-register').style.display = 'block';
+            event.target.classList.add('active');
+
+            if (method === 'biometric') {
+                checkBiometricSupport();
+            }
+        }
+
+        function checkBiometricSupport() {
+            const statusEl = document.getElementById('biometric-status');
+            if (true) {
+                statusEl.style.display = 'inline-flex';
+            }
+        }
+
+        function triggerSocialRegister(provider) {
+            console.log(`Registering with ${provider}`);
+            window.location.href = `/auth/${provider}?register=true`;
+        }
+
+        function triggerBiometricRegister(method) {
+            console.log(`Biometric registration via ${method}`);
+            alert(`Biometric registration (${method}) would be initiated here`);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('password-register').style.display = 'block';
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+
+            fetch('/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            })
+                .then(response => response.json().then(data => ({ status: response.status, body: data })))
+                .then(({ status, body }) => {
+                    if (status === 201) {
+                        alert("Registration was successfull!");
+                        window.location.href = body.redirect_url || '/';
+                    } else {
+                        alert(body.error || "Registration failed. Please try again.");
+                    }
+                })
+                .catch(() => {
+                    alert("An unexpected error occurred. Please try again later.");
+                });
+        });
+    </script>
+</body>
+
+</html>
