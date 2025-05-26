@@ -61,10 +61,10 @@
             <h3>Email Sign In</h3>
             <p class="auth-description">We'll send a secure link to your email</p>
 
-            <form action="/login/email" method="post">
+            <form id="loginForm_JWT">
                 <div class="input-group">
                     <i class="fas fa-envelope margin_i"></i>
-                    <input type="email" id="email" name="email" placeholder="Email address" required
+                    <input type="email" id="email_jwt" name="email_jwt" placeholder="Email address" required
                         autocomplete="email">
                 </div>
 
@@ -272,8 +272,31 @@
                     }
                 })
                 .catch(() => {
-                     alert("An unexpected error occurred. Please try again later.");
+                    alert("An unexpected error occurred. Please try again later.");
                 });
+        });
+
+        document.getElementById('loginForm_JWT').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email_jwt');
+            const emailValue = document.getElementById('email_jwt').value;
+
+            fetch('/login_jwt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ emailValue })
+            })
+                .then(response => response.json().then(data => ({ status: response.status, body: data })))
+                .then(({ status, body }) => {
+                    if (status === 200) {
+                        email.value = '';
+                        alert("If there's an account with that email, you’ll receive a login link shortly.");
+                        console.log("JWT:", body.magic_link);
+                    } else {
+                        alert("Login failed. Please try again later!");
+                    }
+                })
         });
 
     </script>

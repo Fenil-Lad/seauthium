@@ -201,7 +201,7 @@
             text-align: center;
             color: var(--system-orange);
             text-decoration: none;
-            border: 2px solid var(--system-gray-4);
+            border: 3px solid var(--system-orange);
             border-radius: 14px;
             transition: all var(--transition-fast);
             margin-bottom: 12px;

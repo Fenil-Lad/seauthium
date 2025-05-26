@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Seauthium - Authentication Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <style>
+        :root {
+            --system-font-dark: #f1f1f1;
+            --system-font-light: #1a1a1a;
+            --system-gray-1: #d0d0d0;
+            --system-gray-2: #a0a0a0;
+            --system-gray-4: #5a5a5a;
+            --system-orange: #dddddd;
+            --transition-fast: 0.2s ease;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #3B3B3B;
+            color: var(--system-font-dark);
+            margin: 0;
+            padding: 30px;
+        }
+
+        .auth-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* HEADER CONTAINER */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        /* LOGO */
+        .logo h2 {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--system-orange);
+            letter-spacing: -0.5px;
+            user-select: none;
+            margin-top: 30px;
+        }
+
+        /* PROFILE ICON + DROPDOWN */
+        .profile-menu-container {
+            position: relative;
+            z-index: 1000;
+        }
+
+        .profile-avatar {
+            font-size: 2.4rem;
+            color: var(--system-orange);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            user-select: none;
+        }
+
+        .profile-dropdown {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            right: 0;
+            background-color: #2D2D2D;
+            /* border: 1px solid var(--system-gray-4); */
+            border-radius: 10px;
+            margin-top: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            min-width: 150px;
+        }
+
+        .profile-dropdown a {
+            color: var(--system-orange);
+            padding: 12px 16px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+            user-select: none;
+        }
+
+        .profile-dropdown a:hover {
+            background-color: #444;
+        }
+
+        /* MAIN TITLES */
+        h1 {
+            font-size: 1.75rem;
+            margin-bottom: 0.3em;
+            font-weight: 600;
+        }
+
+        h2,
+        h3 {
+            margin-top: 0;
+            margin-bottom: 0.5em;
+            font-weight: 600;
+            color: var(--system-orange);
+        }
+
+        /* DASHBOARD PANELS */
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 25px;
+        }
+
+        .panel {
+            background-color: #2D2D2D;
+            border-radius: 30px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            padding: 25px 30px;
+            flex: 1 1 480px;
+            min-width: 340px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #auth-methods-panel {
+            max-width: 600px;
+        }
+
+        /* AUTH METHODS CARDS */
+        .method-card {
+            border-radius: 30px;
+            padding: 18px 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            background-color: #303030;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: default;
+        }
+
+        .method-icon {
+            font-size: 2.2rem;
+            color: var(--system-orange);
+            min-width: 48px;
+            text-align: center;
+        }
+
+        .method-info h4 {
+            margin: 0 0 6px 0;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--system-font-dark);
+        }
+
+        .method-info p {
+            margin: 0;
+            color: var(--system-gray-2);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .sub-list {
+            margin-top: 8px;
+            padding-left: 20px;
+        }
+
+        .sub-list li {
+            list-style: disc;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+            color: var(--system-font-dark);
+        }
+
+        /* LOGIN LOGS TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #444;
+            text-align: left;
+            color: var(--system-font-dark);
+        }
+
+        th {
+            background-color: #2d2d2d;
+            font-weight: 600;
+            color: var(--system-orange);
+        }
+
+        tr:hover {
+            background-color: #2f2f2f;
+        }
+
+        .status-success {
+            color: #66bb6a;
+            font-weight: 600;
+        }
+
+        .status-error {
+            color: #ef5350;
+            font-weight: 600;
+        }
+
+        .status-warning {
+            color: #ffa726;
+            font-weight: 600;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            #auth-methods-panel,
+            #login-logs-panel {
+                max-width: 100%;
+            }
+        }
+
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--system-orange);
+            text-decoration: none;
+            border: 2px solid var(--system-gray-4);
+            border-radius: 14px;
+            background-color: transparent;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            user-select: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: #dddddd;
+            color: var(--system-font-light);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+
+        <header class="header">
+            <div class="logo">
+                <h2>Seauthium</h2>
+            </div>
+
+            <div class="profile-menu-container">
+                <div class="profile-avatar" onclick="toggleProfileMenu()" title="User Menu" aria-haspopup="true"
+                    aria-expanded="false" role="button" tabindex="0">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="profile-dropdown" id="profileDropdown" role="menu" aria-label="User profile options">
+                    <a href="/profile" role="menuitem" tabindex="-1">Profile</a>
+                    <a href="/logout" role="menuitem" tabindex="-1">Logout</a>
+                </div>
+            </div>
+        </header>
+
+        <h1>Authentication Dashboard</h1>
+        <p>Review your enabled authentication methods and recent login activity below.</p>
+
+        <div class="dashboard">
+            <!-- Auth Methods Panel -->
+            <section id="auth-methods-panel" class="panel">
+                <h3>Authentication Methods</h3>
+                <div id="methods-list">
+                    <!-- Method cards inserted here -->
+                </div>
+            </section>
+
+            <!-- Login Logs Panel -->
+            <section id="login-logs-panel" class="panel">
+                <h3>Recent Login Logs</h3>
+                <div id="login-logs-container">
+                    <!-- Login logs table inserted here -->
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Example data (replace with real data from backend)
+        const allowedAuthMethods = {
+            password: {
+                enabled: true,
+                description: "Login with email and password.",
+            },
+            email: {
+                enabled: false,
+                description: "Login with email confirmation link.",
+            },
+            social: {
+                enabled: true,
+                providers: ["apple", "google"],
+                description: "Login with social accounts.",
+            },
+            biometric: {
+                enabled: true,
+                methods: ["face", "fingerprint"],
+                description: "Use biometric data like Face ID or Touch ID.",
+            },
+            token: {
+                enabled: false,
+                description: "Use developer tokens for authentication.",
+            },
+        };
+
+        const loginLogs = [
+            { date: "2025-05-21 12:45", ip: "192.168.1.10", userAgent: "Chrome on Windows", status: "success" },
+            { date: "2025-05-20 09:20", ip: "192.168.1.11", userAgent: "Firefox on Linux", status: "error" },
+            { date: "2025-05-19 17:33", ip: "192.168.1.12", userAgent: "Safari on macOS", status: "warning" },
+        ];
+
+        // Toggle profile dropdown menu
+        function toggleProfileMenu() {
+            const dropdown = document.getElementById('profileDropdown');
+            const avatar = document.querySelector('.profile-avatar');
+            if (dropdown.style.display === "flex") {
+                dropdown.style.display = "none";
+                avatar.setAttribute('aria-expanded', 'false');
+            } else {
+                dropdown.style.display = "flex";
+                avatar.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+        // Close dropdown if clicked outside
+        window.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('profileDropdown');
+            const avatar = document.querySelector('.profile-avatar');
+            if (!dropdown.contains(e.target) && !avatar.contains(e.target)) {
+                dropdown.style.display = "none";
+                avatar.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Keyboard accessibility for profile avatar
+        document.querySelector('.profile-avatar').addEventListener('keydown', (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                toggleProfileMenu();
+            }
+        });
+
+        // Render auth methods dynamically
+        function renderAuthMethods() {
+            const container = document.getElementById('methods-list');
+            container.innerHTML = '';
+
+            if (allowedAuthMethods.password.enabled) {
+                container.appendChild(createMethodCard('fas fa-key', 'Password', allowedAuthMethods.password.description));
+            }
+            if (allowedAuthMethods.email.enabled) {
+                container.appendChild(createMethodCard('fas fa-envelope', 'Email Confirmation', allowedAuthMethods.email.description));
+            }
+            if (allowedAuthMethods.social.enabled) {
+                const card = createMethodCard('fas fa-user-friends', 'Social Login', allowedAuthMethods.social.description);
+                const providersList = document.createElement('ul');
+                providersList.classList.add('sub-list');
+                allowedAuthMethods.social.providers.forEach(provider => {
+                    const li = document.createElement('li');
+                    li.textContent = provider.charAt(0).toUpperCase() + provider.slice(1);
+                    providersList.appendChild(li);
+                });
+                card.querySelector('.method-info').appendChild(providersList);
+                container.appendChild(card);
+            }
+            if (allowedAuthMethods.biometric.enabled) {
+                const card = createMethodCard('fas fa-fingerprint', 'Biometric Authentication', allowedAuthMethods.biometric.description);
+                const methodsList = document.createElement('ul');
+                methodsList.classList.add('sub-list');
+                allowedAuthMethods.biometric.methods.forEach(method => {
+                    const li = document.createElement('li');
+                    li.textContent = method.charAt(0).toUpperCase() + method.slice(1);
+                    methodsList.appendChild(li);
+                });
+                card.querySelector('.method-info').appendChild(methodsList);
+                container.appendChild(card);
+            }
+            if (allowedAuthMethods.token.enabled) {
+                container.appendChild(createMethodCard('fas fa-user-lock', 'Developer Token', allowedAuthMethods.token.description));
+            }
+        }
+
+        // Helper to create method card
+        function createMethodCard(iconClass, title, description) {
+            const card = document.createElement('div');
+            card.className = 'method-card';
+
+            const icon = document.createElement('i');
+            icon.className = `method-icon ${iconClass}`;
+            card.appendChild(icon);
+
+            const info = document.createElement('div');
+            info.className = 'method-info';
+
+            const h4 = document.createElement('h4');
+            h4.textContent = title;
+            info.appendChild(h4);
+
+            const p = document.createElement('p');
+            p.textContent = description;
+            info.appendChild(p);
+
+            card.appendChild(info);
+
+            return card;
+        }
+
+        // Render login logs table
+        function renderLoginLogs() {
+            const container = document.getElementById('login-logs-container');
+            container.innerHTML = '';
+
+            if (!loginLogs.length) {
+                container.textContent = "No login activity found.";
+                return;
+            }
+
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+
+            ['Date', 'IP Address', 'User Agent', 'Status'].forEach(text => {
+                const th = document.createElement('th');
+                th.textContent = text;
+                headerRow.appendChild(th);
+            });
+
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+
+            loginLogs.forEach(log => {
+                const tr = document.createElement('tr');
+
+                const tdDate = document.createElement('td');
+                tdDate.textContent = log.date;
+                tr.appendChild(tdDate);
+
+                const tdIP = document.createElement('td');
+                tdIP.textContent = log.ip;
+                tr.appendChild(tdIP);
+
+                const tdAgent = document.createElement('td');
+                tdAgent.textContent = log.userAgent;
+                tr.appendChild(tdAgent);
+
+                const tdStatus = document.createElement('td');
+                tdStatus.textContent = log.status.charAt(0).toUpperCase() + log.status.slice(1);
+
+                // Add color class based on status
+                if (log.status === 'success') {
+                    tdStatus.classList.add('status-success');
+                } else if (log.status === 'error') {
+                    tdStatus.classList.add('status-error');
+                } else if (log.status === 'warning') {
+                    tdStatus.classList.add('status-warning');
+                }
+                tr.appendChild(tdStatus);
+
+                tbody.appendChild(tr);
+            });
+
+            table.appendChild(tbody);
+            container.appendChild(table);
+        }
+
+        // Initialize dashboard content
+        renderAuthMethods();
+        renderLoginLogs();
+    </script>
+</body>
+
+</html>
