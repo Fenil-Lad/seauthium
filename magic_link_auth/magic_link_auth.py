@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime, timedelta
 
 def init_db():
-    conn = sqlite3.connect('../magic_link_auth/db/magic_link_auth.db')
+    conn = sqlite3.connect('../db/magic_link_auth/login_tokens.db')
     c = conn.cursor()
     c.execute('''
         CREATE TABLE IF NOT EXISTS magic_tokens (
@@ -16,3 +16,4 @@ def init_db():
     conn.close()
 
 init_db()
+

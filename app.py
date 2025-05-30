@@ -3,17 +3,17 @@ import os
 from functools import wraps
 from standard_auth.standard_auth import standard_signup, standard_login, close_db, init_db
 # from flask_mail import Mail, Message
-from flask_jwt_extended import JWTManager, create_access_token
+# from flask_jwt_extended import JWTManager, create_access_token
 from datetime import datetime, timezone, timedelta
-from flask_jwt_extended import decode_token, get_jwt_identity
+# from flask_jwt_extended import decode_token, get_jwt_identity
 import secrets
 import sqlite3
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
-app.config["JWT_SECRET_KEY"] = os.urandom(24)
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=2)
-jwt = JWTManager(app)
+# app.config["JWT_SECRET_KEY"] = os.urandom(24)
+# app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=2)
+# jwt = JWTManager(app)
 
 #####################################
 # AUTHENTICATION DECORATORS STARTS #
@@ -97,45 +97,79 @@ def logout():
 #  STANDARD AUTH ROUTES ENDS  #
 ###############################
 
-###############################
-#    JWT TOKEN ROUTES STARTS  #
-###############################
+#####################################
+#    MAGIC LINK AUTH ROUTES STARTS  #
+####################################
 
-@app.route('/login_jwt', methods=['POST'])
-def login_jwt():
-    data = request.get_json()
-    email = data.get('emailValue')
-    
-    if email != 'fenillad2103@gmail.com':
-        return jsonify({"msg": "Bad username or password"}), 401
-    
-    magic_token = secrets.token_urlsafe(32)
-    
-    # Set token expiry time (e.g., 15 minutes from now)
-    expires_at = datetime.now(timezone.utc) + timedelta(minutes=5)
-    
-    # Save token to DB
-    conn = sqlite3.connect('magic_link_auth/db/magic_link_auth.db')
+DB_PATH = '../db/magic_link_auth/login_tokens.db'
+
+def init_db():
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute(
-        "INSERT INTO magic_tokens (token, email, expires_at) VALUES (?, ?, ?)",
-        (magic_token, email, expires_at.isoformat())
-    )
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS magic_tokens (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            token TEXT UNIQUE NOT NULL,
+            email TEXT NOT NULL,
+            expires_at TEXT NOT NULL
+        )
+    ''')
     conn.commit()
     conn.close()
 
-    magic_link = f"http://localhost:5000/verify?token={magic_token}"
 
-    return jsonify({"magic_link": magic_link}), 200
+@app.route('/login_magic_link', methods=['POST'])
+def login_magic_link():
+    try:
+        data = request.get_json()
 
+        if not data or 'emailValue' not in data or not data['emailValue'].strip():
+            return jsonify({"msg": "Email is required"}), 400
 
+        if data['emailValue'].strip() != "fenillad2103@gmail.com":
+            return jsonify({"msg": "Invalid credentials"}), 401
+
+        token = secrets.token_urlsafe(32)
+        expires_at = (datetime.now(timezone.utc) + timedelta(minutes=5)).isoformat()
+
+        # Ensure DB and table exist
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO magic_tokens (token, email, expires_at) VALUES (?, ?, ?)",
+                (token, data['emailValue'].strip(), expires_at)
+            )
+            conn.commit()
+            conn.close()
+        except sqlite3.OperationalError:
+            # If DB or table is missing, initialize and retry
+            init_db()
+            conn = sqlite3.connect(DB_PATH)
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO magic_tokens (token, email, expires_at) VALUES (?, ?, ?)",
+                (token, data['emailValue'].strip(), expires_at)
+            )
+            conn.commit()
+            conn.close()
+
+        return jsonify({
+            "magic_link": f"http://localhost:5000/verify?token={token}"
+        }), 200
+
+    except Exception as e:
+        return jsonify({"msg": "Internal server error", "error": str(e)}), 500
+    
+    
 @app.route('/verify')
 def verify():
     token = request.args.get('token')
     if not token:
         return "Missing token", 400
 
-    conn = sqlite3.connect('magic_link_auth/db/magic_link_auth.db')
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT email, expires_at FROM magic_tokens WHERE token = ?", (token,))
     row = c.fetchone()
@@ -164,9 +198,18 @@ def verify():
     return redirect(url_for('auth_dashboard'))
 
 
-###############################
-#    JWT TOKEN ROUTES ENDS    #
-###############################
+@app.route('/register_magic_link', methods=['POST'])
+def register_magic_link():
+    data = request.get_json()
+    email = data['email']
+    
+    # Save the email to DB
+    print("Email registered")
+    print("Send user email")
+
+#####################################
+#    MAGIC LINK AUTH ROUTES ENDS    #
+####################################
 
 
 ###############################

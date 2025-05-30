@@ -3,7 +3,7 @@ import bcrypt
 import os
 from flask import g
 
-DB_PATH = os.path.join(os.path.dirname(__file__), 'db', 'standard_auth_users.db')
+DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'db', 'users', 'users.db')
 
 def get_db():
     if 'db' not in g:

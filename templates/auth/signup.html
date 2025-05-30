@@ -60,10 +60,10 @@
             <h3>Email Registration</h3>
             <p class="auth-description">We’ll send a confirmation link to your email</p>
 
-            <form action="/register/email" method="post">
+            <form id="registerForm_magic_link">
                 <div class="input-group">
                     <i class="fas fa-envelope margin_i"></i>
-                    <input type="email" name="email" placeholder="Email address" required>
+                    <input type="email" name="email_magic_link" placeholder="Email address" required>
                 </div>
 
                 <button type="submit" class="btn-primary">Send Confirmation Link</button>
@@ -249,6 +249,34 @@
                     alert("An unexpected error occurred. Please try again later.");
                 });
         });
+
+
+        document.getElementById('registerForm_magic_link').addEventListener('submit', () => {
+            e.preventDefault();
+            const inputBox = document.getElementById('email_magic_link');
+            const inputBoxValue = document.getElementById('email_magic_link').value;
+
+            fetch('/register_magic_link',
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                })
+
+                .then(response => response.json().then(data => ({ status: response.status, body: data })))
+                .then(({ status, body }) => {
+                    if (status === 201) {
+                        alert("Registration was successfull!");
+                        window.location.href = body.redirect_url || '/';
+                    } else {
+                        alert(body.error || "Registration failed. Please try again.");
+                    }
+                })
+                .catch(() => {
+                    alert("An unexpected error occurred. Please try again later.");
+                });
+        });
+
     </script>
 </body>
 
